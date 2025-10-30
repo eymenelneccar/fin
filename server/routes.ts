@@ -10,7 +10,8 @@ import {
   insertIncomeEntrySchema,
   insertExpenseEntrySchema,
   insertEmployeeSchema,
-  insertManualUserSchema
+  insertManualUserSchema,
+  insertReceivableSchema
 } from "@shared/schema";
 
 
@@ -222,17 +223,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/income', isAuthenticated, upload.single('receipt'), async (req, res) => {
     try {
-      const validatedData = insertIncomeEntrySchema.parse({
+      // Validate down payment requirements
+      if (req.body.isDownPayment === 'true' || req.body.isDownPayment === true) {
+        if (!req.body.totalAmount || Number(req.body.totalAmount) <= 0) {
+          return res.status(400).json({ message: "المبلغ الكامل مطلوب عند اختيار العربون" });
+        }
+      }
+
+      // Convert empty customerId to null
+      const cleanedBody = {
         ...req.body,
+        customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
         receiptUrl: req.file ? `/uploads/${req.file.filename}` : null
-      });
+      };
+
+      const validatedData = insertIncomeEntrySchema.parse(cleanedBody);
       
       const incomeEntry = await storage.createIncomeEntry(validatedData);
+      
+      // If this is a down payment, create a receivable for the remaining amount
+      if (validatedData.isDownPayment && validatedData.totalAmount) {
+        const totalAmount = Number(validatedData.totalAmount);
+        const paidAmount = Number(validatedData.amount);
+        const remainingAmount = totalAmount - paidAmount;
+
+        if (remainingAmount > 0) {
+          // Get customer name
+          let customerName = "عميل غير محدد";
+          const customerId = validatedData.customerId && validatedData.customerId.trim() !== '' ? validatedData.customerId : null;
+          
+          if (customerId) {
+            const customer = await storage.getCustomer(customerId);
+            if (customer) {
+              customerName = customer.name;
+            }
+          }
+
+          await storage.createReceivable({
+            incomeEntryId: incomeEntry.id,
+            customerId,
+            customerName,
+            totalAmount: validatedData.totalAmount,
+            paidAmount: validatedData.amount,
+            remainingAmount: remainingAmount.toString(),
+            isPaid: false,
+            description: validatedData.description || ""
+          });
+        }
+      }
       
       // Log activity
       await storage.createActivity({
         type: 'income_added',
-        description: `تم تسجيل إدخال ${validatedData.type === 'prints' ? 'مطبوعات' : 'اشتراك'} بقيمة ${validatedData.amount} د.ع`,
+        description: `تم تسجيل إدخال ${validatedData.type === 'prints' ? 'مطبوعات' : 'اشتراك'} بقيمة ${validatedData.amount} د.ع${validatedData.isDownPayment ? ' (عربون)' : ''}`,
         relatedId: incomeEntry.id,
       });
       
@@ -532,6 +575,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ message: "فشل في إنشاء المستخدم" });
       }
+    }
+  });
+
+  // Receivables routes (المستحقات)
+  app.get('/api/receivables', isAuthenticated, async (req, res) => {
+    try {
+      const receivables = await storage.getReceivables();
+      res.json(receivables);
+    } catch (error) {
+      console.error("Error fetching receivables:", error);
+      res.status(500).json({ message: "فشل في جلب المستحقات" });
+    }
+  });
+
+  app.post('/api/receivables', isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertReceivableSchema.parse(req.body);
+      const receivable = await storage.createReceivable(validatedData);
+      res.status(201).json(receivable);
+    } catch (error) {
+      console.error("Error creating receivable:", error);
+      res.status(400).json({ message: "بيانات الدين غير صحيحة" });
+    }
+  });
+
+  app.patch('/api/receivables/:id/pay', isAuthenticated, async (req, res) => {
+    try {
+      const receivable = await storage.markReceivableAsPaid(req.params.id);
+      res.json(receivable);
+    } catch (error) {
+      console.error("Error marking receivable as paid:", error);
+      res.status(500).json({ message: "فشل في تسديد الدين" });
+    }
+  });
+
+  app.delete('/api/receivables/:id', isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteReceivable(req.params.id);
+      res.json({ message: "تم حذف الدين بنجاح" });
+    } catch (error) {
+      console.error("Error deleting receivable:", error);
+      res.status(500).json({ message: "فشل في حذف الدين" });
     }
   });
 

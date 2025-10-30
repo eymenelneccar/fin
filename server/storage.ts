@@ -5,6 +5,7 @@ import {
   expenseEntries,
   employees,
   activities,
+  receivables,
   type User,
   type UpsertUser,
   type Customer,
@@ -18,6 +19,8 @@ import {
   type Activity,
   type InsertActivity,
   type InsertManualUser,
+  type Receivable,
+  type InsertReceivable,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, gte, lte, sql } from "drizzle-orm";
@@ -65,6 +68,13 @@ export interface IStorage {
   // Activity operations
   getRecentActivities(limit?: number): Promise<Activity[]>;
   createActivity(activity: InsertActivity): Promise<Activity>;
+
+  // Receivables operations
+  getReceivables(): Promise<Receivable[]>;
+  getReceivable(id: string): Promise<Receivable | undefined>;
+  createReceivable(receivable: InsertReceivable): Promise<Receivable>;
+  markReceivableAsPaid(id: string): Promise<Receivable>;
+  deleteReceivable(id: string): Promise<void>;
 
   // Dashboard statistics
   getDashboardStats(): Promise<{
@@ -371,6 +381,56 @@ export class DatabaseStorage implements IStorage {
     return activity;
   }
 
+  // Receivables operations
+  async getReceivables(): Promise<Receivable[]> {
+    return await db
+      .select()
+      .from(receivables)
+      .orderBy(desc(receivables.createdAt));
+  }
+
+  async getReceivable(id: string): Promise<Receivable | undefined> {
+    const [receivable] = await db.select().from(receivables).where(eq(receivables.id, id));
+    return receivable;
+  }
+
+  async createReceivable(receivableData: InsertReceivable): Promise<Receivable> {
+    const [receivable] = await db
+      .insert(receivables)
+      .values(receivableData)
+      .returning();
+
+    // Log activity
+    await this.createActivity({
+      type: 'receivable_added',
+      description: `تم تسجيل دين جديد للعميل ${receivableData.customerName} بقيمة ${receivableData.remainingAmount} د.ع`,
+      relatedId: receivable.id,
+    });
+
+    return receivable;
+  }
+
+  async markReceivableAsPaid(id: string): Promise<Receivable> {
+    const [receivable] = await db
+      .update(receivables)
+      .set({ isPaid: true, paidAt: new Date() })
+      .where(eq(receivables.id, id))
+      .returning();
+
+    // Log activity
+    await this.createActivity({
+      type: 'receivable_paid',
+      description: `تم تسديد الدين للعميل ${receivable.customerName}`,
+      relatedId: receivable.id,
+    });
+
+    return receivable;
+  }
+
+  async deleteReceivable(id: string): Promise<void> {
+    await db.delete(receivables).where(eq(receivables.id, id));
+  }
+
   // Dashboard statistics
   async getDashboardStats() {
     const now = new Date();
@@ -454,6 +514,7 @@ class MemoryStorage implements IStorage {
   private expenseEntries: ExpenseEntry[] = [];
   private employees: Employee[] = [];
   private activities: Activity[] = [];
+  private receivables: Receivable[] = [];
 
   constructor() {
     console.log("⚠️  Using in-memory storage - data will be lost on restart");
@@ -720,6 +781,64 @@ class MemoryStorage implements IStorage {
     
     this.activities.push(activity);
     return activity;
+  }
+
+  // Receivables operations
+  async getReceivables(): Promise<Receivable[]> {
+    return this.receivables
+      .sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
+  }
+
+  async getReceivable(id: string): Promise<Receivable | undefined> {
+    return this.receivables.find(r => r.id === id);
+  }
+
+  async createReceivable(receivableData: InsertReceivable): Promise<Receivable> {
+    const receivable: Receivable = {
+      ...receivableData,
+      id: this.generateId(),
+      createdAt: new Date(),
+      paidAt: null
+    } as Receivable;
+    
+    this.receivables.push(receivable);
+    
+    // Log activity
+    await this.createActivity({
+      type: 'receivable_added',
+      description: `تم تسجيل دين جديد للعميل ${receivableData.customerName} بقيمة ${receivableData.remainingAmount} د.ع`,
+      relatedId: receivable.id,
+    });
+    
+    return receivable;
+  }
+
+  async markReceivableAsPaid(id: string): Promise<Receivable> {
+    const index = this.receivables.findIndex(r => r.id === id);
+    if (index >= 0) {
+      this.receivables[index] = { 
+        ...this.receivables[index], 
+        isPaid: true, 
+        paidAt: new Date() 
+      };
+      
+      // Log activity
+      await this.createActivity({
+        type: 'receivable_paid',
+        description: `تم تسديد الدين للعميل ${this.receivables[index].customerName}`,
+        relatedId: id,
+      });
+      
+      return this.receivables[index];
+    }
+    throw new Error('Receivable not found');
+  }
+
+  async deleteReceivable(id: string): Promise<void> {
+    const index = this.receivables.findIndex(r => r.id === id);
+    if (index >= 0) {
+      this.receivables.splice(index, 1);
+    }
   }
 
   async getDashboardStats() {

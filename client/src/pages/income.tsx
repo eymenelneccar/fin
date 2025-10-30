@@ -23,6 +23,7 @@ export default function Income() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [incomeType, setIncomeType] = useState("");
+  const [isDownPayment, setIsDownPayment] = useState(false);
   const [editingEntry, setEditingEntry] = useState<any>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -35,6 +36,8 @@ export default function Income() {
       type: "",
       printType: "",
       amount: "",
+      totalAmount: "",
+      isDownPayment: false,
       customerId: "",
       description: "",
     },
@@ -197,6 +200,26 @@ export default function Income() {
   });
 
   const onSubmit = (data: any) => {
+    // Validate down payment requirements
+    if (isDownPayment) {
+      if (!data.totalAmount || Number(data.totalAmount) <= 0) {
+        toast({
+          title: "خطأ",
+          description: "المبلغ الكامل مطلوب عند اختيار العربون",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (Number(data.totalAmount) < Number(data.amount)) {
+        toast({
+          title: "خطأ",
+          description: "المبلغ الكامل يجب أن يكون أكبر من أو يساوي المبلغ المدفوع",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     if (editingEntry) {
       editIncomeMutation.mutate({ id: editingEntry.id, data });
     } else {
@@ -260,6 +283,7 @@ export default function Income() {
                 form.reset();
                 setSelectedFile(null);
                 setIncomeType("");
+                setIsDownPayment(false);
               }
             }}
           >
@@ -330,7 +354,7 @@ export default function Income() {
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>المبلغ (دينار عراقي)</FormLabel>
+                        <FormLabel>{isDownPayment ? "المبلغ المدفوع (العربون) - دينار عراقي" : "المبلغ (دينار عراقي)"}</FormLabel>
                         <FormControl>
                           <Input 
                             type="number"
@@ -344,6 +368,45 @@ export default function Income() {
                       </FormItem>
                     )}
                   />
+
+                  <div className="flex items-center space-x-2 space-x-reverse">
+                    <input
+                      type="checkbox"
+                      id="isDownPayment"
+                      checked={isDownPayment}
+                      onChange={(e) => {
+                        setIsDownPayment(e.target.checked);
+                        form.setValue("isDownPayment", e.target.checked);
+                      }}
+                      className="w-4 h-4 rounded border-white/20"
+                      data-testid="checkbox-down-payment"
+                    />
+                    <Label htmlFor="isDownPayment" className="text-sm cursor-pointer">
+                      عربون (دفعة مقدمة)
+                    </Label>
+                  </div>
+
+                  {isDownPayment && (
+                    <FormField
+                      control={form.control}
+                      name="totalAmount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>المبلغ الكامل (دينار عراقي)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number"
+                              placeholder="0" 
+                              className="glass-card border-white/20 focus:border-purple-400"
+                              data-testid="input-total-amount"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                   
                   <FormField
                     control={form.control}

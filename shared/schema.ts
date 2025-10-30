@@ -60,9 +60,26 @@ export const incomeEntries = pgTable("income_entries", {
   type: varchar("type").notNull(), // prints, subscription
   printType: text("print_type"), // only if type is prints
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  isDownPayment: boolean("is_down_payment").default(false), // هل هو عربون
+  totalAmount: decimal("total_amount", { precision: 10, scale: 2 }), // المبلغ الكامل (للعربون)
   receiptUrl: text("receipt_url"),
   description: text("description"),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Receivables/Debts table (المستحقات)
+export const receivables = pgTable("receivables", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  incomeEntryId: varchar("income_entry_id").references(() => incomeEntries.id),
+  customerId: varchar("customer_id").references(() => customers.id),
+  customerName: text("customer_name").notNull(), // اسم العميل
+  totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(), // المبلغ الكامل
+  paidAmount: decimal("paid_amount", { precision: 10, scale: 2 }).notNull(), // المبلغ المدفوع (العربون)
+  remainingAmount: decimal("remaining_amount", { precision: 10, scale: 2 }).notNull(), // المبلغ المتبقي
+  isPaid: boolean("is_paid").default(false), // هل تم التسديد
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow(),
+  paidAt: timestamp("paid_at"), // تاريخ التسديد
 });
 
 // Expense entries table
@@ -106,6 +123,12 @@ export const insertCustomerSchema = createInsertSchema(customers).omit({
 export const insertIncomeEntrySchema = createInsertSchema(incomeEntries).omit({
   id: true,
   createdAt: true,
+});
+
+export const insertReceivableSchema = createInsertSchema(receivables).omit({
+  id: true,
+  createdAt: true,
+  paidAt: true,
 });
 
 export const insertExpenseEntrySchema = createInsertSchema(expenseEntries).omit({
@@ -152,3 +175,5 @@ export type Employee = typeof employees.$inferSelect;
 export type InsertEmployee = z.infer<typeof insertEmployeeSchema>;
 export type Activity = typeof activities.$inferSelect;
 export type InsertActivity = z.infer<typeof insertActivitySchema>;
+export type Receivable = typeof receivables.$inferSelect;
+export type InsertReceivable = z.infer<typeof insertReceivableSchema>;
