@@ -603,7 +603,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch('/api/receivables/:id/pay', isAuthenticated, async (req, res) => {
     try {
+      // Get receivable details first
+      const receivableToPayResult = await storage.getReceivables();
+      const receivableToPay = receivableToPayResult.find((r: any) => r.id === req.params.id);
+      
+      if (!receivableToPay) {
+        return res.status(404).json({ message: "المستحق غير موجود" });
+      }
+
+      if (receivableToPay.isPaid) {
+        return res.status(400).json({ message: "تم تسديد هذا المستحق مسبقاً" });
+      }
+
+      // Mark receivable as paid
       const receivable = await storage.markReceivableAsPaid(req.params.id);
+      
+      // Add the remaining amount to income entries
+      await storage.createIncomeEntry({
+        type: 'prints',
+        amount: receivable.remainingAmount,
+        customerId: receivable.customerId,
+        isDownPayment: false,
+        description: `تسديد المبلغ المتبقي من العربون - ${receivable.customerName}`,
+        receiptUrl: null,
+        printType: null,
+        totalAmount: null,
+      });
+
+      // Log activity
+      await storage.createActivity({
+        type: 'receivable_paid',
+        description: `تم تسديد المستحق بقيمة ${receivable.remainingAmount} د.ع للعميل ${receivable.customerName}`,
+        relatedId: receivable.id,
+      });
+
+      // Invalidate dashboard stats
       res.json(receivable);
     } catch (error) {
       console.error("Error marking receivable as paid:", error);

@@ -35,9 +35,11 @@ export default function Receivables() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/receivables"] });
       queryClient.invalidateQueries({ queryKey: ["/api/activities"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/income"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
       toast({
         title: "تم التسديد",
-        description: "تم تسديد الدين بنجاح",
+        description: "تم تسديد الدين وإضافة المبلغ للواردات بنجاح",
       });
     },
     onError: (error: Error) => {
