@@ -95,7 +95,6 @@ app.use((req, res, next) => {
     reusePort: process.platform !== 'win32',
   }, () => {
     console.log(`✅ IQR Control server running on http://${host}:${port}`);
-    console.log(`👤 Login: admin / admin123`);
     console.log(`💾 Database: Connected to Neon PostgreSQL`);
     log(`serving on port ${port}`);
   });

@@ -24,8 +24,6 @@ async function setupDefaultUser() {
     });
 
     console.log('✅ Default admin user created successfully');
-    console.log('👤 Username: admin');
-    console.log('🔑 Password: admin123');
     
   } catch (error) {
     console.error('❌ Error setting up admin user:', error);
