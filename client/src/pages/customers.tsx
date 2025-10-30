@@ -479,22 +479,22 @@ export default function Customers() {
               {customers.map((customer: any, index: number) => (
                 <GlassCard 
                   key={customer.id} 
-                  className="p-6"
+                  className="p-4 md:p-6"
                   data-testid={`card-customer-${index}`}
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col space-y-4">
                     <div className="flex items-center space-x-4 space-x-reverse">
-                      <div className={`w-12 h-12 gradient-purple rounded-full flex items-center justify-center`}>
+                      <div className={`w-12 h-12 gradient-purple rounded-full flex items-center justify-center flex-shrink-0`}>
                         <Calendar className="w-6 h-6" />
                       </div>
-                      <div>
+                      <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-semibold flex items-center space-x-2 space-x-reverse">
                           <span data-testid={`text-customer-name-${index}`}>{customer.name}</span>
                           {isExpired(customer.expiryDate) && (
-                            <AlertTriangle className="w-4 h-4 text-red-400" />
+                            <AlertTriangle className="w-4 h-4 text-red-400 flex-shrink-0" />
                           )}
                           {isExpiringSoon(customer.expiryDate) && (
-                            <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                            <AlertTriangle className="w-4 h-4 text-yellow-400 flex-shrink-0" />
                           )}
                         </h3>
                         <p className="text-sm text-gray-400" data-testid={`text-customer-join-date-${index}`}>
@@ -512,14 +512,14 @@ export default function Customers() {
                       </div>
                     </div>
                     
-                    <div className="flex space-x-3 space-x-reverse">
+                    <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:space-x-3 md:space-x-reverse">
                       <Button
                         onClick={() => handleEditCustomer(customer)}
                         variant="outline"
-                        className="border-blue-400 text-blue-400 hover:bg-blue-400/10"
+                        className="border-blue-400 text-blue-400 hover:bg-blue-400/10 text-xs md:text-sm"
                         data-testid={`button-edit-${index}`}
                       >
-                        <Edit className="w-4 h-4 ml-1" />
+                        <Edit className="w-3 h-3 md:w-4 md:h-4 ml-1" />
                         تعديل
                       </Button>
 
@@ -527,10 +527,10 @@ export default function Customers() {
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="outline"
-                            className="border-red-400 text-red-400 hover:bg-red-400/10"
+                            className="border-red-400 text-red-400 hover:bg-red-400/10 text-xs md:text-sm"
                             data-testid={`button-delete-${index}`}
                           >
-                            <Trash2 className="w-4 h-4 ml-1" />
+                            <Trash2 className="w-3 h-3 md:w-4 md:h-4 ml-1" />
                             حذف
                           </Button>
                         </AlertDialogTrigger>
@@ -557,10 +557,10 @@ export default function Customers() {
                         <AlertDialogTrigger asChild>
                           <Button
                             disabled={renewSubscriptionMutation.isPending}
-                            className="gradient-green hover:scale-105 transition-transform"
+                            className="gradient-green hover:scale-105 transition-transform text-xs md:text-sm"
                             data-testid={`button-renew-${index}`}
                           >
-                            <RotateCcw className="w-4 h-4 ml-1" />
+                            <RotateCcw className="w-3 h-3 md:w-4 md:h-4 ml-1" />
                             تجديد
                           </Button>
                         </AlertDialogTrigger>
@@ -587,7 +587,7 @@ export default function Customers() {
                         <Button
                           asChild
                           variant="outline"
-                          className="border-blue-400 text-blue-400 hover:bg-blue-400/10"
+                          className="border-blue-400 text-blue-400 hover:bg-blue-400/10 text-xs md:text-sm col-span-2 md:col-span-1"
                           data-testid={`button-view-menu-${index}`}
                         >
                           <a 
@@ -595,7 +595,7 @@ export default function Customers() {
                             target="_blank" 
                             rel="noopener noreferrer"
                           >
-                            <ExternalLink className="w-4 h-4 ml-1" />
+                            <ExternalLink className="w-3 h-3 md:w-4 md:h-4 ml-1" />
                             المنيو
                           </a>
                         </Button>
