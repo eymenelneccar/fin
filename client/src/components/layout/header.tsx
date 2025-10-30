@@ -16,7 +16,7 @@ export function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProfileEditOpen, setIsProfileEditOpen] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: "أيمن النجار",
+    name: "IQR MENU",
     email: user?.email || "admin@iqrcontrol.com",
     username: "admin",
     phone: "+964 770 123 4567",
@@ -106,7 +106,7 @@ export function Header() {
                   )}
                 </div>
                 <span className="text-sm font-medium" data-testid="text-username">
-                  أيمن النجار
+                  IQR MENU
                 </span>
               </div>
             </DialogTrigger>
@@ -129,7 +129,7 @@ export function Header() {
                     )}
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold" data-testid="text-profile-name">أيمن النجار</h3>
+                    <h3 className="text-xl font-bold" data-testid="text-profile-name">IQR MENU</h3>
                     <p className="text-sm text-gray-400" data-testid="text-profile-email">{user?.email || "admin@iqrcontrol.com"}</p>
                     <p className="text-xs text-gray-500" data-testid="text-profile-role">مدير النظام</p>
                   </div>
@@ -140,7 +140,7 @@ export function Header() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">اسم المستخدم:</span>
-                      <span data-testid="text-profile-username">أيمن النجار</span>
+                      <span data-testid="text-profile-username">IQR MENU</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">البريد الإلكتروني:</span>
