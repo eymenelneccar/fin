@@ -43,7 +43,7 @@ export default function Income() {
     },
   });
 
-  const { data: incomeEntries, isLoading, error: incomeError } = useQuery({
+  const { data: incomeEntries, isLoading, error: incomeError } = useQuery<any[]>({
     queryKey: ["/api/income"]
   });
 
@@ -58,7 +58,7 @@ export default function Income() {
     }, 500);
   }
 
-  const { data: customers, error: customersFetchError } = useQuery({
+  const { data: customers = [], error: customersFetchError } = useQuery<any[]>({
     queryKey: ["/api/customers"]
   });
 
