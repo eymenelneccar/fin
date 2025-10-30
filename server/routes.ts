@@ -230,10 +230,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Convert empty customerId to null
+      // Convert empty customerId to null and isDownPayment to boolean
       const cleanedBody = {
         ...req.body,
         customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
+        isDownPayment: req.body.isDownPayment === 'true' || req.body.isDownPayment === true,
         receiptUrl: req.file ? `/uploads/${req.file.filename}` : null
       };
 
