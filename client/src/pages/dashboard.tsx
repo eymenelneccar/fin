@@ -131,12 +131,13 @@ export default function Dashboard() {
       stats: ["تتبع الديون", "إدارة الدفعات"],
     },
     {
-      title: "إدارة المستخدمين",
-      description: "إنشاء حسابات مستخدمين بصلاحيات محددة",
-      icon: UserPlus,
+      title: "الشكاوى والاقتراحات",
+      description: "إرسال الشكاوى والاقتراحات للإدارة",
+      icon: ExternalLink,
       gradient: "blue",
-      link: "/user-management",
-      stats: ["إدارة المستخدمين", "صلاحيات متقدمة"],
+      link: "https://kpi-xqng.onrender.com/admin",
+      external: true,
+      stats: ["تواصل مباشر", "نظام الإدارة"],
     },
     {
       title: "المستثمرين",

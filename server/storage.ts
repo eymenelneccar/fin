@@ -245,12 +245,27 @@ export class DatabaseStorage implements IStorage {
     return entry;
   }
 
-  async getPrintIncomeEntries(): Promise<IncomeEntry[]> {
-    return await db
-      .select()
+  async getPrintIncomeEntries(): Promise<any[]> {
+    const prints = await db
+      .select({
+        id: incomeEntries.id,
+        type: incomeEntries.type,
+        printType: incomeEntries.printType,
+        amount: incomeEntries.amount,
+        isDownPayment: incomeEntries.isDownPayment,
+        totalAmount: incomeEntries.totalAmount,
+        receiptUrl: incomeEntries.receiptUrl,
+        description: incomeEntries.description,
+        createdAt: incomeEntries.createdAt,
+        customerId: incomeEntries.customerId,
+        customerName: customers.name,
+      })
       .from(incomeEntries)
+      .leftJoin(customers, eq(incomeEntries.customerId, customers.id))
       .where(eq(incomeEntries.type, 'prints'))
       .orderBy(desc(incomeEntries.createdAt));
+    
+    return prints;
   }
 
   // Expense operations

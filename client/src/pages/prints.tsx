@@ -119,6 +119,11 @@ export default function Prints() {
                         <h3 className="text-lg font-semibold" data-testid={`text-print-type-${index}`}>
                           {entry.printType || "مطبوع"}
                         </h3>
+                        {entry.customerName && (
+                          <p className="text-sm text-blue-300" data-testid={`text-print-customer-${index}`}>
+                            العميل: {entry.customerName}
+                          </p>
+                        )}
                         <p className="text-2xl font-bold text-green-400" data-testid={`text-print-amount-${index}`}>
                           {entry.amount} د.ع
                         </p>
