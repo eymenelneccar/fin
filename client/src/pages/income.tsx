@@ -321,6 +321,7 @@ export default function Income() {
                           <SelectContent>
                             <SelectItem value="prints">مطبوعات</SelectItem>
                             <SelectItem value="subscription">اشتراك</SelectItem>
+                            <SelectItem value="other">أخرى</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

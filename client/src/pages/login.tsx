@@ -93,11 +93,6 @@ export default function Login() {
             {loginMutation.isPending ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
           </Button>
         </form>
-
-        <div className="mt-6 text-center text-sm text-gray-400">
-          <p>المستخدم الافتراضي: admin</p>
-          <p>كلمة المرور: admin123</p>
-        </div>
       </GlassCard>
     </div>
   );
