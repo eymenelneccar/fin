@@ -370,7 +370,7 @@ export default function Income() {
                     )}
                   />
 
-                  <div className="flex items-center space-x-2 space-x-reverse">
+                  <div className="flex items-center space-x-2 space-x-reverse p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
                     <input
                       type="checkbox"
                       id="isDownPayment"
@@ -378,13 +378,23 @@ export default function Income() {
                       onChange={(e) => {
                         setIsDownPayment(e.target.checked);
                         form.setValue("isDownPayment", e.target.checked);
+                        if (!e.target.checked) {
+                          form.setValue("totalAmount", "");
+                        }
                       }}
                       className="w-4 h-4 rounded border-white/20"
                       data-testid="checkbox-down-payment"
                     />
-                    <Label htmlFor="isDownPayment" className="text-sm cursor-pointer">
-                      عربون (دفعة مقدمة)
-                    </Label>
+                    <div className="flex-1">
+                      <Label htmlFor="isDownPayment" className="text-sm cursor-pointer font-semibold">
+                        عربون (دفعة مقدمة)
+                      </Label>
+                      {isDownPayment && (
+                        <p className="text-xs text-purple-300 mt-1">
+                          ⚠️ يجب إدخال المبلغ الكامل أدناه
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   {isDownPayment && (
@@ -393,16 +403,21 @@ export default function Income() {
                       name="totalAmount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>المبلغ الكامل (دينار عراقي)</FormLabel>
+                          <FormLabel className="text-purple-300 font-semibold">
+                            المبلغ الكامل (دينار عراقي) *
+                          </FormLabel>
                           <FormControl>
                             <Input 
                               type="number"
-                              placeholder="0" 
-                              className="glass-card border-white/20 focus:border-purple-400"
+                              placeholder="أدخل المبلغ الكامل المستحق" 
+                              className="glass-card border-purple-400/40 focus:border-purple-400 text-lg"
                               data-testid="input-total-amount"
                               {...field} 
                             />
                           </FormControl>
+                          <p className="text-xs text-gray-400 mt-1">
+                            المبلغ الكامل يجب أن يكون أكبر من أو يساوي المبلغ المدفوع أعلاه
+                          </p>
                           <FormMessage />
                         </FormItem>
                       )}
