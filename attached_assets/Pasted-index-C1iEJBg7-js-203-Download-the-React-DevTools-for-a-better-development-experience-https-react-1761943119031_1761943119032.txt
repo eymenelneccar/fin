@@ -1,0 +1,68 @@
+index-C1iEJBg7.js:203 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api/auth/user:1  Failed to load resource: the server responded with a status of 401 ()
+api/income:1  Failed to load resource: the server responded with a status of 500 ()
+index-C1iEJBg7.js:487 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-C1iEJBg7.js:487
+index-C1iEJBg7.js:493 Form submitted with data: Object
+index-C1iEJBg7.js:493 Form errors: Object
+api/income:1  Failed to load resource: the server responded with a status of 400 ()
+index-C1iEJBg7.js:493 Income creation error: {"message":"بيانات الإدخال غير صحيحة"}
+(anonymous) @ index-C1iEJBg7.js:493
+index-C1iEJBg7.js:493 Form submitted with data: {customerId: 'c7459ff8-77bf-4e87-add4-e0c1bc2dc82d', type: 'subscription', printType: '', amount: '12000', isDownPayment: false, …}
+index-C1iEJBg7.js:493 Form errors: {}
+index-C1iEJBg7.js:493  POST https://fin-8.onrender.com/api/income 400 (Bad Request)
+mutationFn @ index-C1iEJBg7.js:493
+fn @ index-C1iEJBg7.js:212
+A @ index-C1iEJBg7.js:212
+start @ index-C1iEJBg7.js:212
+execute @ index-C1iEJBg7.js:212
+await in execute
+mutate @ index-C1iEJBg7.js:212
+(anonymous) @ index-C1iEJBg7.js:233
+J @ index-C1iEJBg7.js:493
+(anonymous) @ index-C1iEJBg7.js:487
+await in (anonymous)
+or @ index-C1iEJBg7.js:78
+a0 @ index-C1iEJBg7.js:78
+_p @ index-C1iEJBg7.js:78
+Yl @ index-C1iEJBg7.js:78
+PE @ index-C1iEJBg7.js:90
+zM @ index-C1iEJBg7.js:90
+OE @ index-C1iEJBg7.js:90
+qM @ index-C1iEJBg7.js:90
+(anonymous) @ index-C1iEJBg7.js:90
+_N @ index-C1iEJBg7.js:174
+i0 @ index-C1iEJBg7.js:78
+mx @ index-C1iEJBg7.js:90
+gV @ index-C1iEJBg7.js:78
+ex @ index-C1iEJBg7.js:78
+mV @ index-C1iEJBg7.js:78
+index-C1iEJBg7.js:493 Income creation error: {"message":"بيانات الإدخال غير صحيحة"}
+(anonymous) @ index-C1iEJBg7.js:493
+Promise.then
+mutationFn @ index-C1iEJBg7.js:493
+fn @ index-C1iEJBg7.js:212
+A @ index-C1iEJBg7.js:212
+start @ index-C1iEJBg7.js:212
+execute @ index-C1iEJBg7.js:212
+await in execute
+mutate @ index-C1iEJBg7.js:212
+(anonymous) @ index-C1iEJBg7.js:233
+J @ index-C1iEJBg7.js:493
+(anonymous) @ index-C1iEJBg7.js:487
+await in (anonymous)
+or @ index-C1iEJBg7.js:78
+a0 @ index-C1iEJBg7.js:78
+_p @ index-C1iEJBg7.js:78
+Yl @ index-C1iEJBg7.js:78
+PE @ index-C1iEJBg7.js:90
+zM @ index-C1iEJBg7.js:90
+OE @ index-C1iEJBg7.js:90
+qM @ index-C1iEJBg7.js:90
+(anonymous) @ index-C1iEJBg7.js:90
+_N @ index-C1iEJBg7.js:174
+i0 @ index-C1iEJBg7.js:78
+mx @ index-C1iEJBg7.js:90
+gV @ index-C1iEJBg7.js:78
+ex @ index-C1iEJBg7.js:78
+mV @ index-C1iEJBg7.js:78

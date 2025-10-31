@@ -241,10 +241,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Convert empty customerId to null and isDownPayment to boolean
+      // Convert empty strings to null for optional fields
       const cleanedBody = {
         ...req.body,
         customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
+        printType: req.body.printType && req.body.printType.trim() !== '' ? req.body.printType : null,
+        totalAmount: req.body.totalAmount && req.body.totalAmount.trim() !== '' ? req.body.totalAmount : null,
+        description: req.body.description && req.body.description.trim() !== '' ? req.body.description : null,
         isDownPayment: req.body.isDownPayment === 'true' || req.body.isDownPayment === true,
         receiptUrl: req.file ? `/uploads/${req.file.filename}` : null
       };
@@ -300,10 +303,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/income/:id', isAuthenticated, upload.single('receipt'), async (req, res) => {
     try {
-      const validatedData = insertIncomeEntrySchema.parse({
+      // Convert empty strings to null for optional fields
+      const cleanedBody = {
         ...req.body,
+        customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
+        printType: req.body.printType && req.body.printType.trim() !== '' ? req.body.printType : null,
+        totalAmount: req.body.totalAmount && req.body.totalAmount.trim() !== '' ? req.body.totalAmount : null,
+        description: req.body.description && req.body.description.trim() !== '' ? req.body.description : null,
+        isDownPayment: req.body.isDownPayment === 'true' || req.body.isDownPayment === true,
         receiptUrl: req.file ? `/uploads/${req.file.filename}` : req.body.receiptUrl
-      });
+      };
+
+      const validatedData = insertIncomeEntrySchema.parse(cleanedBody);
       
       const incomeEntry = await storage.updateIncomeEntry(req.params.id, validatedData);
       
