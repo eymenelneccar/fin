@@ -252,6 +252,14 @@ export default function Income() {
     if (value !== "prints") {
       form.setValue("printType", "");
     }
+    if (value === "downpayment") {
+      setIsDownPayment(true);
+      form.setValue("isDownPayment", true);
+    } else {
+      setIsDownPayment(false);
+      form.setValue("isDownPayment", false);
+      form.setValue("totalAmount", "");
+    }
   };
 
   return (
@@ -321,6 +329,7 @@ export default function Income() {
                           <SelectContent>
                             <SelectItem value="prints">مطبوعات</SelectItem>
                             <SelectItem value="subscription">اشتراك</SelectItem>
+                            <SelectItem value="downpayment">عربون</SelectItem>
                             <SelectItem value="other">أخرى</SelectItem>
                           </SelectContent>
                         </Select>
@@ -370,32 +379,42 @@ export default function Income() {
                     )}
                   />
 
-                  <div className="flex items-center space-x-2 space-x-reverse p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                    <input
-                      type="checkbox"
-                      id="isDownPayment"
-                      checked={isDownPayment}
-                      onChange={(e) => {
-                        setIsDownPayment(e.target.checked);
-                        form.setValue("isDownPayment", e.target.checked);
-                        if (!e.target.checked) {
-                          form.setValue("totalAmount", "");
-                        }
-                      }}
-                      className="w-4 h-4 rounded border-white/20"
-                      data-testid="checkbox-down-payment"
-                    />
-                    <div className="flex-1">
-                      <Label htmlFor="isDownPayment" className="text-sm cursor-pointer font-semibold">
-                        عربون (دفعة مقدمة)
-                      </Label>
-                      {isDownPayment && (
-                        <p className="text-xs text-purple-300 mt-1">
-                          ⚠️ يجب إدخال المبلغ الكامل أدناه
-                        </p>
-                      )}
+                  {incomeType !== "downpayment" && (
+                    <div className="flex items-center space-x-2 space-x-reverse p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                      <input
+                        type="checkbox"
+                        id="isDownPayment"
+                        checked={isDownPayment}
+                        onChange={(e) => {
+                          setIsDownPayment(e.target.checked);
+                          form.setValue("isDownPayment", e.target.checked);
+                          if (!e.target.checked) {
+                            form.setValue("totalAmount", "");
+                          }
+                        }}
+                        className="w-4 h-4 rounded border-white/20"
+                        data-testid="checkbox-down-payment"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="isDownPayment" className="text-sm cursor-pointer font-semibold">
+                          عربون (دفعة مقدمة)
+                        </Label>
+                        {isDownPayment && (
+                          <p className="text-xs text-purple-300 mt-1">
+                            ⚠️ يجب إدخال المبلغ الكامل أدناه
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  
+                  {incomeType === "downpayment" && (
+                    <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                      <p className="text-sm text-purple-300">
+                        💡 قمت باختيار "عربون" - يجب إدخال المبلغ المدفوع والمبلغ الكامل أدناه
+                      </p>
+                    </div>
+                  )}
 
                   {isDownPayment && (
                     <FormField
