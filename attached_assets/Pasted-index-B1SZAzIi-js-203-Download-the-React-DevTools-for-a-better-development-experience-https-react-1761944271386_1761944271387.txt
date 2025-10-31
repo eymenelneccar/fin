@@ -1,0 +1,59 @@
+index-B1SZAzIi.js:203 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+api/auth/user:1  Failed to load resource: the server responded with a status of 401 ()
+api/income:1  Failed to load resource: the server responded with a status of 500 ()
+index-B1SZAzIi.js:487 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-B1SZAzIi.js:487
+index-B1SZAzIi.js:493 Form submitted with data: {
+  "customerId": "44520823-6ea6-4c88-b6c2-e17bd0150496",
+  "type": "subscription",
+  "printType": "",
+  "amount": "1000",
+  "isDownPayment": false,
+  "totalAmount": "",
+  "description": ""
+}
+index-B1SZAzIi.js:493 Form errors: {}
+api/income:1  Failed to load resource: the server responded with a status of 400 ()
+index-B1SZAzIi.js:493 Income creation error: {"message":"بيانات الإدخال غير صحيحة","details":"column \"is_down_payment\" of relation \"income_entries\" does not exist"}
+(anonymous) @ index-B1SZAzIi.js:493
+index-B1SZAzIi.js:487 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-B1SZAzIi.js:487
+api/income:1  Failed to load resource: the server responded with a status of 500 ()
+index-B1SZAzIi.js:487 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ index-B1SZAzIi.js:487
+index-B1SZAzIi.js:493 Form submitted with data: {
+  "customerId": "32b7c23d-b49e-4f0c-9df6-37c0b0a13290",
+  "type": "subscription",
+  "printType": "",
+  "amount": "1000",
+  "isDownPayment": true,
+  "totalAmount": "",
+  "description": ""
+}
+index-B1SZAzIi.js:493 Form errors: {}
+index-B1SZAzIi.js:493 Form submitted with data: {
+  "customerId": "32b7c23d-b49e-4f0c-9df6-37c0b0a13290",
+  "type": "subscription",
+  "printType": "",
+  "amount": "1000",
+  "isDownPayment": true,
+  "totalAmount": "10000",
+  "description": ""
+}
+index-B1SZAzIi.js:493 Form errors: {}
+api/income:1  Failed to load resource: the server responded with a status of 400 ()
+index-B1SZAzIi.js:493 Income creation error: {"message":"بيانات الإدخال غير صحيحة","details":"column \"is_down_payment\" of relation \"income_entries\" does not exist"}
+(anonymous) @ index-B1SZAzIi.js:493
+index-B1SZAzIi.js:493 Form submitted with data: {
+  "customerId": "32b7c23d-b49e-4f0c-9df6-37c0b0a13290",
+  "type": "subscription",
+  "printType": "",
+  "amount": "1000",
+  "isDownPayment": false,
+  "totalAmount": "",
+  "description": ""
+}
+index-B1SZAzIi.js:493 Form errors: {}
+api/income:1  Failed to load resource: the server responded with a status of 400 ()
+index-B1SZAzIi.js:493 Income creation error: {"message":"بيانات الإدخال غير صحيحة","details":"column \"is_down_payment\" of relation \"income_entries\" does not exist"}
+(anonymous) @ index-B1SZAzIi.js:493
