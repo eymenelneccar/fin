@@ -241,9 +241,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Convert empty strings to null for optional fields
+      // Convert empty strings to null for optional fields and ensure proper types
       const cleanedBody = {
-        ...req.body,
+        type: req.body.type,
+        amount: req.body.amount, // Required field, keep as string for decimal
         customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
         printType: req.body.printType && req.body.printType.trim() !== '' ? req.body.printType : null,
         totalAmount: req.body.totalAmount && req.body.totalAmount.trim() !== '' ? req.body.totalAmount : null,
@@ -252,7 +253,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         receiptUrl: req.file ? `/uploads/${req.file.filename}` : null
       };
 
+      console.log('Cleaned body before validation:', cleanedBody);
       const validatedData = insertIncomeEntrySchema.parse(cleanedBody);
+      console.log('Validated data:', validatedData);
       
       const incomeEntry = await storage.createIncomeEntry(validatedData);
       
@@ -295,9 +298,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.status(201).json(incomeEntry);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating income entry:", error);
-      res.status(400).json({ message: "بيانات الإدخال غير صحيحة" });
+      console.error("Error details:", error.message);
+      if (error.errors) {
+        console.error("Validation errors:", JSON.stringify(error.errors, null, 2));
+      }
+      res.status(400).json({ 
+        message: "بيانات الإدخال غير صحيحة",
+        details: error.message || "Unknown error"
+      });
     }
   });
 

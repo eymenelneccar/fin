@@ -206,8 +206,8 @@ export default function Income() {
   });
 
   const onSubmit = (data: any) => {
-    console.log('Form submitted with data:', data);
-    console.log('Form errors:', form.formState.errors);
+    console.log('Form submitted with data:', JSON.stringify(data, null, 2));
+    console.log('Form errors:', JSON.stringify(form.formState.errors, null, 2));
     
     // Validate down payment requirements
     if (isDownPayment) {
