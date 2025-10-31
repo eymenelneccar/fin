@@ -78,6 +78,8 @@ async function createAllTables() {
         type VARCHAR NOT NULL,
         print_type TEXT,
         amount DECIMAL(10,2) NOT NULL,
+        is_down_payment BOOLEAN DEFAULT false,
+        total_amount DECIMAL(10,2),
         receipt_url TEXT,
         description TEXT,
         created_at TIMESTAMP DEFAULT now()
@@ -117,6 +119,23 @@ async function createAllTables() {
         description TEXT NOT NULL,
         related_id VARCHAR,
         created_at TIMESTAMP DEFAULT now()
+      );
+    `);
+    
+    // Create receivables table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS receivables (
+        id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
+        income_entry_id VARCHAR REFERENCES income_entries(id),
+        customer_id VARCHAR REFERENCES customers(id),
+        customer_name TEXT NOT NULL,
+        total_amount DECIMAL(10,2) NOT NULL,
+        paid_amount DECIMAL(10,2) NOT NULL,
+        remaining_amount DECIMAL(10,2) NOT NULL,
+        is_paid BOOLEAN DEFAULT false,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT now(),
+        paid_at TIMESTAMP
       );
     `);
     
