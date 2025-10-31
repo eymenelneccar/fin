@@ -30,7 +30,10 @@ export default function Income() {
 
   const form = useForm({
     resolver: zodResolver(insertIncomeEntrySchema.extend({
-      customerId: insertIncomeEntrySchema.shape.customerId.optional(),
+      customerId: insertIncomeEntrySchema.shape.customerId.optional().nullable(),
+      printType: insertIncomeEntrySchema.shape.printType.optional().nullable(),
+      totalAmount: insertIncomeEntrySchema.shape.totalAmount.optional().nullable(),
+      description: insertIncomeEntrySchema.shape.description.optional().nullable(),
     })),
     defaultValues: {
       type: "",
@@ -77,8 +80,9 @@ export default function Income() {
     mutationFn: async (data: any) => {
       const formData = new FormData();
       Object.keys(data).forEach(key => {
-        if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
-          formData.append(key, data[key]);
+        const value = data[key];
+        if (value !== null && value !== undefined && value !== '') {
+          formData.append(key, String(value));
         }
       });
       
@@ -92,7 +96,9 @@ export default function Income() {
         credentials: "include",
       }).then(async res => {
         if (!res.ok) {
-          throw new Error(`${res.status}: ${await res.text()}`);
+          const errorText = await res.text();
+          console.error('Income creation error:', errorText);
+          throw new Error(`${res.status}: ${errorText}`);
         }
         return res.json();
       });
@@ -200,6 +206,9 @@ export default function Income() {
   });
 
   const onSubmit = (data: any) => {
+    console.log('Form submitted with data:', data);
+    console.log('Form errors:', form.formState.errors);
+    
     // Validate down payment requirements
     if (isDownPayment) {
       if (!data.totalAmount || Number(data.totalAmount) <= 0) {
