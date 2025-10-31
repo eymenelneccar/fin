@@ -40,6 +40,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   setupAuth(app);
 
+  // Session debugging middleware (after setupAuth)
+  app.use((req, res, next) => {
+    const sessionId = (req.session as any)?.id;
+    const userId = (req.session as any)?.userId;
+    
+    if (req.path.startsWith('/api/') && req.path !== '/api/auth/login' && req.path !== '/api/auth/user') {
+      console.log(`Session debug - Path: ${req.path}, SessionID: ${sessionId}, UserID: ${userId}`);
+    }
+    next();
+  });
+
   // Update user profile
   app.put('/api/auth/user/profile', isAuthenticated, async (req: any, res) => {
     try {

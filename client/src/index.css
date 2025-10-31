@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,7 +23,7 @@
   --border: hsl(217.2, 32.6%, 17.5%);
   --input: hsl(217.2, 32.6%, 17.5%);
   --ring: hsl(262.1, 83.3%, 57.8%);
-  --font-sans: 'Noto Sans Arabic', sans-serif;
+  --font-sans: 'Cairo', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1rem;
@@ -137,7 +137,7 @@
 
 @layer utilities {
   .font-arabic {
-    font-family: 'Noto Sans Arabic', sans-serif;
+    font-family: 'Cairo', sans-serif;
   }
 }
 

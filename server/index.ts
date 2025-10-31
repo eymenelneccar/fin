@@ -21,17 +21,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Session debugging middleware
-app.use((req, res, next) => {
-  const sessionId = (req.session as any)?.id;
-  const userId = (req.session as any)?.userId;
-  
-  if (req.path.startsWith('/api/') && req.path !== '/api/auth/login') {
-    console.log(`Session debug - Path: ${req.path}, SessionID: ${sessionId}, UserID: ${userId}`);
-  }
-  next();
-});
-
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
