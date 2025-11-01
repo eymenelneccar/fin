@@ -57,8 +57,9 @@ export const customers = pgTable("customers", {
 export const incomeEntries = pgTable("income_entries", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   customerId: varchar("customer_id").references(() => customers.id),
-  type: varchar("type").notNull(), // prints, subscription
+  type: varchar("type").notNull(), // prints, subscription, other
   printType: text("print_type"), // only if type is prints
+  source: text("source"), // المصدر
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
   isDownPayment: boolean("is_down_payment").default(false), // هل هو عربون
   totalAmount: decimal("total_amount", { precision: 10, scale: 2 }), // المبلغ الكامل (للعربون)

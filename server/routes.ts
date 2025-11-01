@@ -247,6 +247,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         amount: req.body.amount, // Required field, keep as string for decimal
         customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
         printType: req.body.printType && req.body.printType.trim() !== '' ? req.body.printType : null,
+        source: req.body.source && req.body.source.trim() !== '' ? req.body.source : null,
         totalAmount: req.body.totalAmount && req.body.totalAmount.trim() !== '' ? req.body.totalAmount : null,
         description: req.body.description && req.body.description.trim() !== '' ? req.body.description : null,
         isDownPayment: req.body.isDownPayment === 'true' || req.body.isDownPayment === true,
@@ -318,6 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...req.body,
         customerId: req.body.customerId && req.body.customerId.trim() !== '' ? req.body.customerId : null,
         printType: req.body.printType && req.body.printType.trim() !== '' ? req.body.printType : null,
+        source: req.body.source && req.body.source.trim() !== '' ? req.body.source : null,
         totalAmount: req.body.totalAmount && req.body.totalAmount.trim() !== '' ? req.body.totalAmount : null,
         description: req.body.description && req.body.description.trim() !== '' ? req.body.description : null,
         isDownPayment: req.body.isDownPayment === 'true' || req.body.isDownPayment === true,

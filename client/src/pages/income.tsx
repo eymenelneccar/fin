@@ -32,12 +32,14 @@ export default function Income() {
     resolver: zodResolver(insertIncomeEntrySchema.extend({
       customerId: insertIncomeEntrySchema.shape.customerId.optional().nullable(),
       printType: insertIncomeEntrySchema.shape.printType.optional().nullable(),
+      source: insertIncomeEntrySchema.shape.source.optional().nullable(),
       totalAmount: insertIncomeEntrySchema.shape.totalAmount.optional().nullable(),
       description: insertIncomeEntrySchema.shape.description.optional().nullable(),
     })),
     defaultValues: {
       type: "",
       printType: "",
+      source: "",
       amount: "",
       totalAmount: "",
       isDownPayment: false,
@@ -241,6 +243,7 @@ export default function Income() {
     form.reset({
       type: entry.type,
       printType: entry.printType || "",
+      source: entry.source || "",
       amount: entry.amount.toString(),
       customerId: entry.customerId || "",
       description: entry.description || ""
@@ -330,6 +333,7 @@ export default function Income() {
                           <SelectContent>
                             <SelectItem value="prints">مطبوعات</SelectItem>
                             <SelectItem value="subscription">اشتراك</SelectItem>
+                            <SelectItem value="other">أخرى</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -357,6 +361,30 @@ export default function Income() {
                       )}
                     />
                   )}
+
+                  <FormField
+                    control={form.control}
+                    name="source"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>المصدر</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="glass-card border-white/20" data-testid="select-source">
+                              <SelectValue placeholder="اختر المصدر" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="zainCash">زين كاش</SelectItem>
+                            <SelectItem value="fastPay">فاست باي</SelectItem>
+                            <SelectItem value="cash">كاش</SelectItem>
+                            <SelectItem value="other">أخرى</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   
                   <FormField
                     control={form.control}
