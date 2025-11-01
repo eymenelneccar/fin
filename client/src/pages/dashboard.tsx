@@ -31,31 +31,35 @@ export default function Dashboard() {
     queryKey: ["/api/dashboard/stats"]
   });
 
-  if (statsError && isUnauthorizedError(statsError as Error)) {
-    toast({
-      title: "غير مصرح",
-      description: "جاري إعادة تسجيل الدخول...",
-      variant: "destructive",
-    });
-    setTimeout(() => {
-      window.location.href = "/api/login";
-    }, 500);
-  }
-
   const { data: activities, isLoading: activitiesLoading, error: activitiesError } = useQuery({
     queryKey: ["/api/activities"]
   });
 
-  if (activitiesError && isUnauthorizedError(activitiesError as Error)) {
-    toast({
-      title: "غير مصرح",
-      description: "جاري إعادة تسجيل الدخول...",
-      variant: "destructive",
-    });
-    setTimeout(() => {
-      window.location.href = "/api/login";
-    }, 500);
-  }
+  useEffect(() => {
+    if (statsError && isUnauthorizedError(statsError as Error)) {
+      toast({
+        title: "غير مصرح",
+        description: "جاري إعادة تسجيل الدخول...",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 500);
+    }
+  }, [statsError, toast]);
+
+  useEffect(() => {
+    if (activitiesError && isUnauthorizedError(activitiesError as Error)) {
+      toast({
+        title: "غير مصرح",
+        description: "جاري إعادة تسجيل الدخول...",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 500);
+    }
+  }, [activitiesError, toast]);
 
   const formatValue = (value: string | number) => {
     if (hideNumbers) {

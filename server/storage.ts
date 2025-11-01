@@ -706,6 +706,26 @@ class MemoryStorage implements IStorage {
     return entry;
   }
 
+  async getIncomeEntry(id: string): Promise<IncomeEntry | undefined> {
+    return this.incomeEntries.find(e => e.id === id);
+  }
+
+  async updateIncomeEntry(id: string, data: Partial<InsertIncomeEntry>): Promise<IncomeEntry | null> {
+    const index = this.incomeEntries.findIndex(e => e.id === id);
+    if (index >= 0) {
+      this.incomeEntries[index] = { ...this.incomeEntries[index], ...data } as IncomeEntry;
+      return this.incomeEntries[index];
+    }
+    return null;
+  }
+
+  async deleteIncomeEntry(id: string): Promise<void> {
+    const index = this.incomeEntries.findIndex(e => e.id === id);
+    if (index >= 0) {
+      this.incomeEntries.splice(index, 1);
+    }
+  }
+
   async getPrintIncomeEntries(): Promise<IncomeEntry[]> {
     return this.incomeEntries.filter(entry => entry.type === 'prints')
       .sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0));
@@ -738,6 +758,26 @@ class MemoryStorage implements IStorage {
     });
     
     return entry;
+  }
+
+  async getExpenseEntry(id: string): Promise<ExpenseEntry | undefined> {
+    return this.expenseEntries.find(e => e.id === id);
+  }
+
+  async updateExpenseEntry(id: string, data: Partial<InsertExpenseEntry>): Promise<ExpenseEntry | null> {
+    const index = this.expenseEntries.findIndex(e => e.id === id);
+    if (index >= 0) {
+      this.expenseEntries[index] = { ...this.expenseEntries[index], ...data, updatedAt: new Date() } as ExpenseEntry;
+      return this.expenseEntries[index];
+    }
+    return null;
+  }
+
+  async deleteExpenseEntry(id: string): Promise<void> {
+    const index = this.expenseEntries.findIndex(e => e.id === id);
+    if (index >= 0) {
+      this.expenseEntries.splice(index, 1);
+    }
   }
 
   async getEmployees(): Promise<Employee[]> {
